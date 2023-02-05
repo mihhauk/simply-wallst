@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 const API_URL = 'https://api.simplywall.st/api';
 
@@ -17,12 +17,13 @@ export type CompanyData = {
   };
 };
 
-type StocksQueryResponse = {
+export type StocksQueryResponse = {
   data: CompanyData[];
 };
 
-export const fetchStocks = () =>
-  fetch(API_URL + '/grid/filter?include=info,score', {
+export const fetchStocks = (page: number, pageSize = 12) => {
+  console.log('fetchStocks', page);
+  return fetch(API_URL + '/grid/filter?include=info,score', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -31,8 +32,8 @@ export const fetchStocks = () =>
     body: JSON.stringify({
       id: 1,
       no_result_if_limit: false,
-      offset: 0,
-      size: 12,
+      offset: (page - 1) * pageSize,
+      size: pageSize,
       state: 'read',
       rules: JSON.stringify([
         ['order_by', 'market_cap', 'desc'],
@@ -44,9 +45,15 @@ export const fetchStocks = () =>
       ]),
     }),
   });
+};
 
-export const useStocksQuery = () =>
-  useQuery<StocksQueryResponse, Error>({
+export const useInfiniteStocksQuery = () =>
+  useInfiniteQuery<StocksQueryResponse, Error>({
     queryKey: ['stocks'],
-    queryFn: () => fetchStocks().then((res) => res.json()),
+    queryFn: ({ pageParam = 1 }) =>
+      fetchStocks(pageParam).then((res) => res.json()),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage;
+    },
   });
