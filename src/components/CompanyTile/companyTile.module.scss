@@ -1,0 +1,27 @@
+.card {
+  display: flex;
+  gap: 2rem;
+  width: 400px;
+  background-color: #e0e1dd;
+  color: #0d1b2a;
+  padding: 0.5rem;
+  margin: 1rem;
+  border-radius: 0.9vh;
+}
+
+.chartWrapper {
+  width: 150px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.fullName {
+  color: #000814;
+  font-weight: 600;
+  font-size: large;
+}
