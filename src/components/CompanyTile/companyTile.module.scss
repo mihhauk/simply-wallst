@@ -1,7 +1,6 @@
 .card {
   display: flex;
   gap: 2rem;
-  width: 400px;
   background-color: #e0e1dd;
   color: #0d1b2a;
   padding: 0.5rem;
@@ -18,6 +17,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  text-align: start;
 }
 
 .fullName {

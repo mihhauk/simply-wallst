@@ -1,22 +1,37 @@
 import { StocksQueryResponse, useInfiniteStocksQuery } from '../../api/stocks';
 import { useInfiniteScrollQuery } from '../../hooks/useInfiniteScrollQuery';
 import { CompanyTile } from '../CompanyTile';
-import BeatLoader from 'react-spinners/BeatLoader';
+import { Loader } from '../Loader';
+import styles from './stocksList.module.scss';
 
-type Props = {};
+type Props = {
+  countryFilter: string;
+  sortOrder: SortOrder;
+};
 
-export function StocksList({}: Props) {
-  const { observerCallback, data, isSuccess, isFetchingNextPage } =
-    useInfiniteScrollQuery<StocksQueryResponse>({
-      query: useInfiniteStocksQuery,
-    });
+export function StocksList({ countryFilter, sortOrder }: Props) {
+  const {
+    observerCallback,
+    data,
+    isSuccess,
+    isFetchingNextPage,
+    isInitialLoading,
+  } = useInfiniteScrollQuery<StocksQueryResponse>({
+    query: () => useInfiniteStocksQuery({ countryFilter, sortOrder }),
+  });
+  if (isInitialLoading) {
+    return <Loader />;
+  }
+
+  const noResults = !data?.pages[0]?.data.length;
 
   if (!isSuccess) {
     return <h2>Error</h2>;
   }
 
   return (
-    <div>
+    <div className={styles.list}>
+      {noResults && <span className={styles.noResults}>No results</span>}
       {data?.pages.map((page) =>
         page.data.map(({ id, name, unique_symbol, score }) => (
           <CompanyTile
@@ -27,15 +42,8 @@ export function StocksList({}: Props) {
           />
         ))
       )}
-      <div className="loader" ref={observerCallback}>
-        {isFetchingNextPage && (
-          <BeatLoader
-            loading
-            color="#36d7b7"
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
-        )}
+      <div ref={observerCallback}>
+        {!isInitialLoading && isFetchingNextPage && <Loader />}
       </div>
     </div>
   );

@@ -59,5 +59,6 @@ export function useInfiniteScrollQuery<T>({
     isFetchingNextPage,
     isSuccess,
     hasNextPage,
+    isInitialLoading,
   };
 }

@@ -21,9 +21,13 @@ export type StocksQueryResponse = {
   data: CompanyData[];
 };
 
-export const fetchStocks = (page: number, pageSize = 12) => {
-  console.log('fetchStocks', page);
-  return fetch(API_URL + '/grid/filter?include=info,score', {
+export const fetchStocks = (
+  countryFilter: string,
+  sortOrder: SortOrder,
+  page: number,
+  pageSize = 12
+) =>
+  fetch(API_URL + '/grid/filter?include=info,score', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -36,22 +40,29 @@ export const fetchStocks = (page: number, pageSize = 12) => {
       size: pageSize,
       state: 'read',
       rules: JSON.stringify([
-        ['order_by', 'market_cap', 'desc'],
+        ['order_by', 'market_cap', sortOrder],
         ['primary_flag', '=', true],
         ['grid_visible_flag', '=', true],
         ['market_cap', 'is_not_null'],
         ['is_fund', '=', false],
-        ['aor', [['country_name', 'in', ['au']]]],
+        ['aor', [['country_name', 'in', [countryFilter]]]],
       ]),
     }),
   });
-};
 
-export const useInfiniteStocksQuery = () =>
+export const useInfiniteStocksQuery = ({
+  countryFilter,
+  sortOrder,
+}: {
+  countryFilter: string;
+  sortOrder: SortOrder;
+}) =>
   useInfiniteQuery<StocksQueryResponse, Error>({
-    queryKey: ['stocks'],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchStocks(pageParam).then((res) => res.json()),
+    queryKey: ['stocks', countryFilter, sortOrder],
+    queryFn: ({ pageParam }) =>
+      fetchStocks(countryFilter, sortOrder, pageParam).then((res) =>
+        res.json()
+      ),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage = allPages.length + 1;
       return nextPage;
