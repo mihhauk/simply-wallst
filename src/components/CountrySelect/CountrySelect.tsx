@@ -1,7 +1,7 @@
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import styles from './countrySelect.module.scss';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import countryList from 'country-list';
 import 'flag-icons/css/flag-icons.min.css';
+import styles from './countrySelect.module.scss';
 
 type Props = {
   value: string;

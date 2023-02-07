@@ -1,3 +1,4 @@
+import Alert from '@mui/material/Alert';
 import { StocksQueryResponse, useInfiniteStocksQuery } from '../../api/stocks';
 import { useInfiniteScrollQuery } from '../../hooks/useInfiniteScrollQuery';
 import { CompanyTile } from '../CompanyTile';
@@ -26,7 +27,7 @@ export function StocksList({ countryFilter, sortOrder }: Props) {
   const noResults = !data?.pages[0]?.data.length;
 
   if (!isSuccess) {
-    return <h2>Error</h2>;
+    return <Alert severity="error">Ups, something went wrong!</Alert>;
   }
 
   return (

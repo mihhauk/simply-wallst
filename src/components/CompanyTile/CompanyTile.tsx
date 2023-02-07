@@ -1,4 +1,3 @@
-import React from 'react';
 import { CompanyData } from '../../api/stocks';
 import { SnowflakeScoreChart } from '../SnowflakeScoreChart';
 import styles from './companyTile.module.scss';
@@ -6,7 +5,6 @@ import styles from './companyTile.module.scss';
 type Props = Omit<CompanyData, 'id'>;
 
 export function CompanyTile({ name, unique_symbol, score }: Props) {
-  console.log(name);
   return (
     <div className={styles.card}>
       <div className={styles.chartWrapper}>

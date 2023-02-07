@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts';
 import { CompanyData } from '../../api/stocks';
 
@@ -21,7 +21,6 @@ export function SnowflakeScoreChart({ score }: Props) {
     () => getScoreColor(value, income, health, past, future),
     [value, income, health, past, future]
   );
-  console.log(color);
 
   const chartData = [
     {
